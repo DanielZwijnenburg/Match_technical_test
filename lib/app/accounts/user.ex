@@ -7,6 +7,8 @@ defmodule VendingMachine.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :role, Ecto.Enum, values: [:seller, :buyer], default: :buyer
+    field :deposit, :integer, default: 0
 
     timestamps(type: :utc_datetime)
   end
