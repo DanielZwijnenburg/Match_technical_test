@@ -1,9 +1,13 @@
 defmodule VendingMachineWeb.Api.V1.UserJSON do
   alias VendingMachine.Accounts.User
 
-  @doc """
-  Renders a single user.
-  """
+  def show(%{user: user, token: token}) do
+    json =
+      data(user)
+      |> Map.merge(%{token: token})
+    %{data: json}
+  end
+
   def show(%{user: user}) do
     %{data: data(user)}
   end
