@@ -2,10 +2,9 @@ import Config
 
 # Configure your database
 config :app, VendingMachine.Repo,
-  username: System.get_env("PG_USER"),
-  password: System.get_env("PG_PASSWORD"),
-  hostname: System.get_env("PG_HOST"),
-  port:     System.get_env("PG_PORT"),
+  username: System.get_env("PG_USER") || "postgres",
+  password: System.get_env("PG_PASSWORD") || "postgres",
+  hostname: "localhost",
   database: "app_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
@@ -20,11 +19,11 @@ config :app, VendingMachine.Repo,
 config :app, VendingMachineWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {0, 0, 0, 0}, port: 4000],
+  http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  secret_key_base: "zUL2pJwnA9UweJsvs+FUsEUycdr6xBR5kBc4Wtpo3gVl8Wt7uAkRzJH346/Af8su",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}

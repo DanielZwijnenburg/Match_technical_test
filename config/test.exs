@@ -9,10 +9,8 @@ config :bcrypt_elixir, :log_rounds, 1
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :app, VendingMachine.Repo,
-  username: System.get_env("PG_USER"),
-  password: System.get_env("PG_PASSWORD"),
-  hostname: System.get_env("PG_HOST"),
-  port:     System.get_env("PG_PORT"),
+  username: System.get_env("PG_USER") || "postgres",
+  password: System.get_env("PG_PASSWORD") || "postgres",
   database: "app_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
