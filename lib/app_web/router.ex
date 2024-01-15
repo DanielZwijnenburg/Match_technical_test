@@ -24,9 +24,13 @@ defmodule VendingMachineWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", VendingMachineWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", VendingMachineWeb do
+    pipe_through :api
+
+    scope "/v1", Api.V1, as: :api_v1 do
+      resources("/users", UserController, only: [:create])
+    end
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:app, :dev_routes) do
