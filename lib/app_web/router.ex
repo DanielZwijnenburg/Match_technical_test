@@ -17,18 +17,31 @@ defmodule VendingMachineWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :authenticated do
+    plug :fetch_api_user
+  end
+
   scope "/", VendingMachineWeb do
     pipe_through :browser
 
     get "/", PageController, :home
   end
 
-  # Other scopes may use custom stacks.
   scope "/api", VendingMachineWeb do
     pipe_through :api
 
     scope "/v1", Api.V1, as: :api_v1 do
       resources("/users", UserController, only: [:create])
+    end
+  end
+
+  scope "/api", VendingMachineWeb do
+    pipe_through [:api, :authenticated]
+
+    scope "/v1", Api.V1, as: :api_v1 do
+      resources("/deposits", DepositController, only: [:index, :create])
+
+      delete "/deposits/reset", DepositController, :reset
     end
   end
 

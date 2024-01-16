@@ -2,11 +2,17 @@ defmodule VendingMachine.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias VendingMachine.Deposits.Deposit
+
   schema "users" do
+    has_many(:deposits, Deposit)
+
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :role, Ecto.Enum, values: [:seller, :buyer], default: :buyer
+    field :deposit, :integer, default: 0
 
     timestamps(type: :utc_datetime)
   end
@@ -36,9 +42,10 @@ defmodule VendingMachine.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :role])
     |> validate_email(opts)
     |> validate_password(opts)
+    |> validate_inclusion(:role, VendingMachine.Accounts.allowed_roles())
   end
 
   defp validate_email(changeset, opts) do
@@ -154,5 +161,14 @@ defmodule VendingMachine.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  @doc """
+  Updates deposit with given amount
+  """
+  def deposit_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:deposit])
+    |> validate_number(:deposit, greater_than_or_equal_to: 0)
   end
 end
