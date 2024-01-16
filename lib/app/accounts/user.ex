@@ -42,9 +42,10 @@ defmodule VendingMachine.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :role])
     |> validate_email(opts)
     |> validate_password(opts)
+    |> validate_inclusion(:role, VendingMachine.Accounts.allowed_roles())
   end
 
   defp validate_email(changeset, opts) do

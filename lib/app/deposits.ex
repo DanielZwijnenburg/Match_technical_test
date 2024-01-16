@@ -3,12 +3,17 @@ defmodule VendingMachine.Deposits do
   The Deposits context.
   """
 
+  import Ecto.Query, warn: false
   alias VendingMachine.Repo
   alias VendingMachine.Deposits.Deposit
   alias VendingMachine.Accounts.User
 
   def allowed_coins do
     [5, 10, 20, 50, 100]
+  end
+
+  def list_deposits(user) do
+    Repo.all(Deposit, user_id: user.id)
   end
 
   ## Deposit creation

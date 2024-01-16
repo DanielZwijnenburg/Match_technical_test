@@ -15,7 +15,9 @@ defmodule VendingMachineWeb.Api.V1.UserJSON do
   defp data(%User{} = user) do
     %{
       id: user.id,
-      email: user.email
+      email: user.email,
+      role: user.role,
+      deposit: user.deposit
     }
   end
 end

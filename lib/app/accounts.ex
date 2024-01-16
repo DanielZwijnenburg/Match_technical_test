@@ -8,6 +8,10 @@ defmodule VendingMachine.Accounts do
 
   alias VendingMachine.Accounts.{User, UserToken, UserNotifier}
 
+  def allowed_roles() do
+    [:buyer, :seller]
+  end
+
   ## Database getters
 
   @doc """
