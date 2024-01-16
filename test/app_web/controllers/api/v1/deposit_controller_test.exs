@@ -73,4 +73,26 @@ defmodule VendingMachineWeb.Api.V1.DepositControllerTest do
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
+
+  describe "/reset (delete) deposits" do
+    test "returns unauthorized if not authenticated", %{conn: conn} do
+      conn =
+        conn
+        |> delete(~p"/api/v1/deposits/reset")
+
+      assert json_response(conn, 401) ==
+        %{"errors" => [%{"detail" => "Unauthorized", "status" => 401}]}
+    end
+
+    test "returns user when reset is successfull", %{conn: conn, user: user} do
+      deposit_fixture(user_id: user.id)
+
+      conn =
+        conn
+        |> log_in_api_user(user)
+        |> delete(~p"/api/v1/deposits/reset")
+
+      assert %{"deposit" => 0} = json_response(conn, 200)["data"]
+    end
+  end
 end

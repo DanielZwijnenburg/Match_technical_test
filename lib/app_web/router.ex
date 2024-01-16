@@ -40,6 +40,8 @@ defmodule VendingMachineWeb.Router do
 
     scope "/v1", Api.V1, as: :api_v1 do
       resources("/deposits", DepositController, only: [:index, :create])
+
+      delete "/deposits/reset", DepositController, :reset
     end
   end
 

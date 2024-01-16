@@ -54,4 +54,17 @@ defmodule VendingMachine.Deposits do
         |> repo.update()
     end
   end
+
+  def reset_deposits(%{id: user_id}) do
+    query = from(d in Deposit, where: d.user_id == ^user_id)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.delete_all(:delete_deposits, query)
+    |> Ecto.Multi.update(:user, User.deposit_changeset(%User{id: user_id}, %{deposit: 0}))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{user: user}} -> {:ok, user}
+      {:error, :user, changeset, _} -> {:error, changeset}
+    end
+  end
 end

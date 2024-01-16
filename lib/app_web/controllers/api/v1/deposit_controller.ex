@@ -42,4 +42,21 @@ defmodule VendingMachineWeb.Api.V1.DepositController do
       |> halt()
     end
   end
+
+  def reset(conn, %{}) do
+    current_user = conn.assigns[:current_user]
+
+    case Deposits.reset_deposits(current_user) do
+      {:ok, user} ->
+          conn
+        |> put_status(:ok)
+        |> put_view(VendingMachineWeb.Api.V1.UserJSON)
+        |> render(:show, user: user)
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_view(ChangesetJSON)
+        |> put_status(:unprocessable_entity)
+        |> render("error.json", changeset: changeset)
+    end
+  end
 end
