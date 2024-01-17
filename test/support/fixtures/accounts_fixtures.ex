@@ -11,7 +11,8 @@ defmodule VendingMachine.AccountsFixtures do
     Enum.into(attrs, %{
       email: unique_user_email(),
       password: valid_user_password(),
-      role: :seller
+      role: :seller,
+      deposit: 100
     })
   end
 
@@ -19,7 +20,7 @@ defmodule VendingMachine.AccountsFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
-      |> VendingMachine.Accounts.register_user()
+      |> VendingMachine.Accounts.create_user()
 
     user
   end

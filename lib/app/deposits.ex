@@ -6,6 +6,7 @@ defmodule VendingMachine.Deposits do
   import Ecto.Query, warn: false
   alias VendingMachine.Repo
   alias VendingMachine.Deposits.Deposit
+  alias VendingMachine.Accounts
   alias VendingMachine.Accounts.User
 
   def allowed_coins do
@@ -57,14 +58,32 @@ defmodule VendingMachine.Deposits do
 
   def reset_deposits(%{id: user_id}) do
     query = from(d in Deposit, where: d.user_id == ^user_id)
+    user = Accounts.get_user!(user_id)
 
     Ecto.Multi.new()
     |> Ecto.Multi.delete_all(:delete_deposits, query)
-    |> Ecto.Multi.update(:user, User.deposit_changeset(%User{id: user_id}, %{deposit: 0}))
+    |> Ecto.Multi.update(:user, User.deposit_changeset(user, %{deposit: 0}))
     |> Repo.transaction()
     |> case do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  def calculate_change(deposit) when deposit > 0 do
+    allowed_coins()
+    |> Enum.reverse()
+    |> Enum.reduce({deposit, %{}}, fn coin, {remaining, acc} ->
+      if remaining >= coin do
+        count = div(remaining, coin)
+        new_remaining = rem(remaining, coin)
+        {new_remaining, Map.put(acc, coin, count)}
+      else
+        {remaining, acc}
+      end
+    end)
+    |> elem(1)
+  end
+
+  def calculate_change(_), do: %{}
 end
