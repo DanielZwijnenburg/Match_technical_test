@@ -50,18 +50,18 @@ Design an API for a vending machine, allowing users with a “seller” role to 
 
 **Tasks**
 
-- REST API should be implemented consuming and producing “application/json”
-- Implement product model with amountAvailable, cost, productName and sellerId fields
-- Implement user model with username, password, deposit and role fields
-- Implement an authentication method (basic, oAuth, JWT or something else, the choice is yours)
-- All of the endpoints should be authenticated unless stated otherwise
-- Implement CRUD for users (POST /user should not require authentication to allow new user registration)
-- Implement CRUD for a product model (GET can be called by anyone, while POST, PUT and DELETE can be called only by the seller user who created the product)
-- Implement /deposit endpoint so users with a “buyer” role can deposit only 5, 10, 20, 50 and 100 cent coins into their vending machine account
-- Implement /buy endpoint (accepts productId, amount of products) so users with a “buyer” role can buy products with the money they’ve deposited. API should return total they’ve spent, products they’ve purchased and their change if there’s any (in an array of 5, 10, 20, 50 and 100 cent coins)
-- Implement /reset endpoint so users with a “buyer” role can reset their deposit back to 0
-- Create web interface for interaction with the API, design choices are left to you
-- Take time to think about possible edge cases and access issues that should be solved
+- [x] REST API should be implemented consuming and producing “application/json” [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/router.ex#L17C28-L17C28)
+- [x] Implement product model with amountAvailable, cost, productName and sellerId fields [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app/products/product.ex#L7-L15)
+- [x] Implement user model with username, password, deposit and role fields [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app/accounts/user.ex)
+- [x] Implement an authentication method (basic, oAuth, JWT or something else, the choice is yours) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app/accounts/user_token.ex)
+- [x] All of the endpoints should be authenticated unless stated otherwise [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/router.ex#L16-L51)
+- [x] Implement CRUD for users (POST /user should not require authentication to allow new user registration) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/controllers/api/v1/user_controller.ex)
+- [x] Implement CRUD for a product model (GET can be called by anyone, while POST, PUT and DELETE can be called only by the seller user who created the product) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/router.ex#L35) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/router.ex#L47) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/controllers/api/v1/product_controller.ex#L10)
+- [x] Implement /deposit endpoint so users with a “buyer” role can deposit only 5, 10, 20, 50 and 100 cent coins into their vending machine account [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/controllers/api/v1/deposit_controller.ex#L9) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/controllers/api/v1/deposit_controller.ex#L17-L33) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app/deposits/deposit.ex#L32)
+- [x] Implement /buy endpoint (accepts productId, amount of products) so users with a “buyer” role can buy products with the money they’ve deposited. API should return total they’ve spent, products they’ve purchased and their change if there’s any (in an array of 5, 10, 20, 50 and 100 cent coins) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/controllers/api/v1/buy_product_controller.ex#L11-L56)
+- [x] Implement /reset endpoint so users with a “buyer” role can reset their deposit back to 0 [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/lib/app_web/controllers/api/v1/deposit_controller.ex#L46-L61)
+- [x] Create web interface for interaction with the API, design choices are left to you [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/tree/main/lib/app_web/live) [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/tree/main/lib/app_web/components)  [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/tree/main/lib/app_web/controllers/page_html)
+- [x] Take time to think about possible edge cases and access issues that should be solved [implemented](https://github.com/DanielZwijnenburg/Match_technical_test/blob/main/README.md#improvements)
 
 **Evaluation criteria:**
 
