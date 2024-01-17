@@ -19,6 +19,7 @@ Make sure to create a buyer and seller user first. Write down the tokens and use
 - Different api scopes are used for securing the different endpoints
 - Plugs are used to allow for users with a certain role to take action
 - Getting and/or updating products is scoped to the owning user
+- Consuming the API to use on the Front-end is not the Phoenix way.
 - I take pride on testing, everything is fully teste, please check it out
 - I take pride on clean and readable code, please check it out
 - I take pride on commit message, please check it out
@@ -37,7 +38,6 @@ Due to time constrains I am not able to get the following improvements done.
 - Refactor the deposits table to a transactions table. To store deposits and 'buys'. This can be used to gather some 'analytics' on which coins are used the most. And which products are being sold the most.
 - Use api and web tokens to list active sessions
 - Implement user show
-- Implement front-end that lists products
 - Refactor only_allowed_roles to a shared module
 - Use a changeset to whitelist and check for user input for the buy_products controller
 

@@ -45,6 +45,8 @@ defmodule VendingMachineWeb.Router do
       delete "/deposits/reset", DepositController, :reset
 
       resources("/products", ProductController, only: [:create, :update, :delete])
+
+      post "/buy", BuyProductController, :buy
     end
   end
 
