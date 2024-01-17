@@ -152,4 +152,44 @@ defmodule VendingMachineWeb.Api.V1.ProductControllerTest do
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
+
+  describe "delete product" do
+    test "returns unauthorized if not authenticated", %{conn: conn, user: user} do
+      product = product_fixture(user_id: user.id)
+
+      conn = delete(conn, ~p"/api/v1/products/#{product}")
+
+      assert json_response(conn, 401) ==
+        %{"errors" => [%{"detail" => "Unauthorized", "status" => 401}]}
+    end
+
+    test "renders not found when user is not the owner", %{conn: conn, user: user} do
+      product_seller = user_fixture(role: "seller")
+      product = product_fixture(user_id: product_seller.id)
+
+      conn =
+        conn
+        |> log_in_api_user(user)
+        |> delete(~p"/api/v1/products/#{product}")
+
+      assert json_response(conn, 404) ==
+        %{"errors" => [%{"detail" => "not found", "status" => 404}]}
+    end
+
+    test "deletes chosen product", %{conn: conn, user: user} do
+      product = product_fixture(user_id: user.id)
+
+      conn =
+        conn
+        |> log_in_api_user(user)
+        |> delete(~p"/api/v1/products/#{product}")
+
+      assert response(conn, 204)
+
+      conn = get(conn, ~p"/api/v1/products/#{product}")
+
+      assert json_response(conn, 404) ==
+        %{"errors" => [%{"detail" => "not found", "status" => 404}]}
+    end
+  end
 end

@@ -7,7 +7,7 @@ defmodule VendingMachineWeb.Api.V1.ProductController do
 
   action_fallback VendingMachineWeb.Api.V1.FallbackController
 
-  plug :only_allow_roles, %{roles: [:seller]} when action in [:create, :update]
+  plug :only_allow_roles, %{roles: [:seller]} when action in [:create, :update, :delete]
 
   def index(conn, _params) do
     products = Products.list_products()
@@ -55,6 +55,18 @@ defmodule VendingMachineWeb.Api.V1.ProductController do
           |> put_view(ChangesetJSON)
           |> put_status(:unprocessable_entity)
           |> render("error.json", changeset: changeset)
+      end
+    else
+      {:error, :not_found}
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    product = Products.get_seller_product(id, conn.assigns[:current_user].id)
+
+    if product do
+      with {:ok, %Product{}} <- Products.delete_product(product) do
+        send_resp(conn, :no_content, "")
       end
     else
       {:error, :not_found}

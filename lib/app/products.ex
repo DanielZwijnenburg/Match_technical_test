@@ -40,4 +40,8 @@ defmodule VendingMachine.Products do
     |> Product.changeset(attrs)
     |> Repo.update()
   end
+
+  def delete_product(%Product{} = product) do
+    Repo.delete(product)
+  end
 end
