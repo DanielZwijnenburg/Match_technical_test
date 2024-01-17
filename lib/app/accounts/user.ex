@@ -48,6 +48,14 @@ defmodule VendingMachine.Accounts.User do
     |> validate_inclusion(:role, VendingMachine.Accounts.allowed_roles())
   end
 
+  def changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:email, :password, :role, :deposit])
+    |> validate_email(opts)
+    |> validate_password(opts)
+    |> validate_inclusion(:role, VendingMachine.Accounts.allowed_roles())
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])
@@ -169,6 +177,7 @@ defmodule VendingMachine.Accounts.User do
   def deposit_changeset(user, attrs) do
     user
     |> cast(attrs, [:deposit])
+    |> validate_required([:deposit])
     |> validate_number(:deposit, greater_than_or_equal_to: 0)
   end
 end
