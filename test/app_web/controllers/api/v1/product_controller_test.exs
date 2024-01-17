@@ -106,17 +106,49 @@ defmodule VendingMachineWeb.Api.V1.ProductControllerTest do
   end
 
   describe "update product" do
+    test "returns unauthorized if not authenticated", %{conn: conn, user: user} do
+      product = product_fixture(user_id: user.id)
+
+      conn = put(conn, ~p"/api/v1/products/#{product}", product: %{})
+
+      assert json_response(conn, 401) ==
+        %{"errors" => [%{"detail" => "Unauthorized", "status" => 401}]}
+    end
+
+    test "renders not found when user is not the owner", %{conn: conn, user: user} do
+      product_seller = user_fixture(role: "seller")
+      product = product_fixture(user_id: product_seller.id)
+
+      conn =
+        conn
+        |> log_in_api_user(user)
+        |> put(~p"/api/v1/products/#{product}", product: %{})
+
+      assert json_response(conn, 404) ==
+        %{"errors" => [%{"detail" => "not found", "status" => 404}]}
+    end
+
     test "renders product when data is valid", %{conn: conn, user: user} do
       updated_amount = 100
       %{id: id} = product = product_fixture(user_id: user.id)
 
-      conn = put(conn, ~p"api/v1/products/#{product}", product: %{amount: updated_amount})
+      conn =
+        conn
+        |> log_in_api_user(user)
+        |> put(~p"/api/v1/products/#{product}", product: %{amount_available: updated_amount})
+
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
-      assert %{"amount" => ^amount} = json_response(conn, 200)["data"]
+      assert %{"amount_available" => ^updated_amount} = json_response(conn, 200)["data"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn, product: product} do
-      conn = put(conn, ~p"<%= schema.api_route_prefix %>/#{product}", product: @invalid_attrs)
+    test "renders errors when data is invalid", %{conn: conn, user: user} do
+      product = product_fixture(user_id: user.id)
+
+      conn =
+        conn
+        |> log_in_api_user(user)
+        |> put(~p"/api/v1/products/#{product}", product: %{amount_available: -1})
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

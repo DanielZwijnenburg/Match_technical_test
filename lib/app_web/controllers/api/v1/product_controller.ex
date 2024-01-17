@@ -44,12 +44,23 @@ defmodule VendingMachineWeb.Api.V1.ProductController do
   end
 
   def update(conn, %{"id" => id, "product" => product_params}) do
-    product = Products.get_product(id)
+    product = Products.get_seller_product(id, conn.assigns[:current_user].id)
 
-    with {:ok, %Product{} = product} <- Products.update_product(product, product_params) do
-      render(conn, :show, product: product)
+    if product do
+      case Products.update_product(product, product_params) do
+        {:ok, %Product{} = product} ->
+          render(conn, :show, product: product)
+        {:error, %Ecto.Changeset{} = changeset} ->
+          conn
+          |> put_view(ChangesetJSON)
+          |> put_status(:unprocessable_entity)
+          |> render("error.json", changeset: changeset)
+      end
+    else
+      {:error, :not_found}
     end
   end
+
   defp only_allow_roles(%{assigns: %{current_user: current_user}} = conn, options) do
     if current_user.role in options[:roles] do
       conn
