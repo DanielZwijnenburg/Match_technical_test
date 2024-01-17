@@ -19,6 +19,7 @@ Make sure to create a buyer and seller user first. Write down the tokens and use
 - Different api scopes are used for securing the different endpoints
 - Plugs are used to allow for users with a certain role to take action
 - Getting and/or updating products is scoped to the owning user
+- Consuming the API to use on the Front-end is not the Phoenix way.
 - I take pride on testing, everything is fully teste, please check it out
 - I take pride on clean and readable code, please check it out
 - I take pride on commit message, please check it out
