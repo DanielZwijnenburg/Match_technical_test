@@ -4,7 +4,7 @@ defmodule VendingMachineWeb.Api.V1.UserController do
   alias VendingMachine.Accounts
   alias VendingMachineWeb.Api.V1.ChangesetJSON
 
-  action_fallback VendingMachineWeb.FallbackController
+  action_fallback VendingMachineWeb.Api.V1.FallbackController
 
   def create(conn, %{"user" => user_params}) do
     case Accounts.register_user(user_params) do

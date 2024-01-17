@@ -4,7 +4,7 @@ defmodule VendingMachineWeb.Api.V1.DepositController do
   alias VendingMachine.Deposits
   alias VendingMachineWeb.Api.V1.ChangesetJSON
 
-  action_fallback VendingMachineWeb.FallbackController
+  action_fallback VendingMachineWeb.Api.V1.FallbackController
 
   plug :only_allow_roles, roles: [:buyer]
 
